@@ -9,6 +9,8 @@ class Details(models.Model):
         blank=True,
     )
     description_long = models.TextField('Полное описание', blank=True)
+    lng = models.CharField('Долгота', max_length=50, null=True)
+    lat = models.CharField('Широта', max_length=50, null=True)
 
     def __str__(self):
         return self.title
@@ -17,7 +19,7 @@ class Details(models.Model):
 class Image(models.Model):
     position_number = models.IntegerField('Порядковый номер')
     image = models.ImageField(upload_to='places/image/')
-    place_properties = models.ForeignKey(
+    place_details = models.ForeignKey(
         Details,
         on_delete=models.CASCADE,
         related_name='imgs',
@@ -26,22 +28,7 @@ class Image(models.Model):
     )
 
     def __str__(self):
-        return f'{self.position_number} - {self.place_properties}'
-
-
-class Coordinates(models.Model):
-    lng = models.CharField('Долгота', max_length=50)
-    lat = models.CharField('Широта', max_length=50)
-    place_properties = models.ForeignKey(
-        Details,
-        on_delete=models.CASCADE,
-        related_name='coordinates',
-        verbose_name='Относятся к',
-        null=True,
-    )
-
-    def __str__(self):
-        return f'{self.lng}, {self.lat}'
+        return f'{self.position_number} - {self.place_details}'
 
 
 class Place(models.Model):
@@ -49,7 +36,7 @@ class Place(models.Model):
     placeId = models.CharField('Идентификатор', max_length=50, null=True)
     lng = models.CharField('Долгота', max_length=50, null=True)
     lat = models.CharField('Широта', max_length=50, null=True)
-    properties = models.OneToOneField(
+    details = models.OneToOneField(
         Details,
         on_delete=models.SET_NULL,
         related_name='place',

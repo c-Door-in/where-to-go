@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from places.models import Place, Coordinates, Image, Details
+from places.models import Place, Image, Details
 
 
 
@@ -13,15 +13,8 @@ class ImageInline(admin.TabularInline):
     model = Image
 
 
-class CoordinatesInline(admin.TabularInline):
-    model = Coordinates
-
-
 @admin.register(Details)
 class DetailsAdmin(admin.ModelAdmin):
-    list_display = ('title', 'coordinates')
-    inlines = [ImageInline, CoordinatesInline]
+    list_display = ('title', 'lng', 'lat')
 
-
-admin.site.register(Coordinates)
 admin.site.register(Image)

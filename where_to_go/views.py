@@ -1,6 +1,7 @@
+from urllib.parse import unquote
 from django.conf import settings
-from django.http import HttpResponse
-from django.shortcuts import render
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, render
 
 from places.models import Place
 
@@ -28,3 +29,19 @@ def index_map(request):
     context = {'places_geojson': places_geojson}
     
     return render(request, template, context=context)
+
+
+def get_place_details(request, place_id):
+    place = get_object_or_404(Place, id=place_id)
+    place_details = {
+        'title': place.details.title,
+        'imgs': [unquote(img.image.url) for img in place.details.imgs.all()],
+        'description_short': place.details.description_short,
+        'description_long': place.details.description_long,
+        'coordinates': {
+            'lng': place.details.lng,
+            'lat': place.details.lat,
+        },
+    }
+    return JsonResponse(place_details, json_dumps_params={'indent': 2,
+                                                          'ensure_ascii': False})
