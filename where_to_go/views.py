@@ -2,6 +2,7 @@ from urllib.parse import unquote
 from django.conf import settings
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 from places.models import Place
 
@@ -22,7 +23,7 @@ def index_map(request):
             'properties': {
                 'title': place.title,
                 'placeId': place.placeId,
-                'detailsUrl': f'{settings.STATIC_URL}where_to_go/places/moscow_legends.json'
+                'detailsUrl': reverse('place_details', args=[place.id])
             },
         }
         places_geojson['features'].append(feature)
