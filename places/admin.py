@@ -16,5 +16,6 @@ class ImageInline(admin.TabularInline):
 @admin.register(Details)
 class DetailsAdmin(admin.ModelAdmin):
     list_display = ('title', 'lng', 'lat')
+    inlines = [ImageInline]
 
 admin.site.register(Image)
