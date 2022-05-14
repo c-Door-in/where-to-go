@@ -2,6 +2,13 @@ from django.db import models
 
 
 class Details(models.Model):
+    details_sort = models.PositiveSmallIntegerField(
+        default=0,
+        db_index=True,
+        blank=False,
+        null=False,
+        verbose_name='details_sort'
+    )
     title = models.CharField('Название', max_length=100)
     description_short = models.TextField(
         'Короткое описание',
@@ -15,9 +22,11 @@ class Details(models.Model):
     def __str__(self):
         return self.title
 
+    class Meta:
+        ordering = ['details_sort']
+
 
 class Image(models.Model):
-    position_number = models.IntegerField('Порядковый номер')
     image = models.ImageField(upload_to='places/image/')
     place_details = models.ForeignKey(
         Details,
@@ -27,8 +36,18 @@ class Image(models.Model):
         null=True,
     )
 
+    img_sort = models.PositiveIntegerField(
+        default=0,
+        blank=False,
+        null=False,
+        verbose_name='Порядок фоток'
+    )
+
     def __str__(self):
-        return f'{self.position_number} - {self.place_details}'
+        return f'image {self.img_sort} - {self.place_details}'
+
+    class Meta:
+        ordering = ['img_sort']
 
 
 class Place(models.Model):
