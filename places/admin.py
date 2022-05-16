@@ -2,22 +2,16 @@ from django.contrib import admin
 from django.utils.html import format_html
 from adminsortable2.admin import SortableAdminMixin, SortableInlineAdminMixin
 
-from places.models import Place, Image, Details
-
-
-@admin.register(Place)
-class PlaceAdmin(admin.ModelAdmin):
-    list_display = ('title',)
+from places.models import Place, Image
 
 
 class SortableImageInline(SortableInlineAdminMixin, admin.TabularInline):
     model = Image
-    list_display = ('img_sort', 'image', 'place_image')
-    # fields = ('img_sort','place_image', 'image')
-    readonly_fields = ('place_image',)
+    list_display = ('img_sort', 'image', 'preview')
+    readonly_fields = ('preview',)
     extra = 0
 
-    def place_image(self, obj):
+    def preview(self, obj):
         return format_html('<img src="{url}" width="{width}" height={height} />'.format(
             url=obj.image.url,
             width=obj.image.width/5,
@@ -26,9 +20,25 @@ class SortableImageInline(SortableInlineAdminMixin, admin.TabularInline):
     )
 
 
-@admin.register(Details)
-class DetailsAdmin(SortableAdminMixin, admin.ModelAdmin):
-    list_display = ('title', 'lng', 'lat')
+@admin.register(Place)
+class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
+    list_display = ('title',)
+    fieldsets = (
+        (None, {
+            'fields': ('title', 'placeId'),
+        }),
+        ('Детальная информация', {
+            'fields': (
+                'details_title',
+                'details_description_short',
+                'details_description_long',
+            ),
+        }),
+        ('Координаты точки', {
+            'fields': ('lng', 'lat'),
+        }),
+    )
     inlines = [SortableImageInline]
 
-admin.site.register(Image)
+# Раскомментить, если нужны отображения группы со всеми фотографиями в админке.
+# admin.site.register(Image)

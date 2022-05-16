@@ -1,6 +1,5 @@
 from urllib.parse import unquote
-from django.conf import settings
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
@@ -35,13 +34,13 @@ def index_map(request):
 def get_place_details(request, place_id):
     place = get_object_or_404(Place, id=place_id)
     place_details = {
-        'title': place.details.title,
-        'imgs': [unquote(img.image.url) for img in place.details.imgs.all()],
-        'description_short': place.details.description_short,
-        'description_long': place.details.description_long,
+        'title': place.details_title,
+        'imgs': [unquote(img.image.url) for img in place.imgs.all()],
+        'description_short': place.details_description_short,
+        'description_long': place.details_description_long,
         'coordinates': {
-            'lng': place.details.lng,
-            'lat': place.details.lat,
+            'lng': place.lng,
+            'lat': place.lat,
         },
     }
     return JsonResponse(place_details, json_dumps_params={'indent': 2,
