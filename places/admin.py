@@ -23,6 +23,7 @@ class SortableImageInline(SortableInlineAdminMixin, admin.TabularInline):
 @admin.register(Place)
 class PlaceAdmin(SortableAdminMixin, admin.ModelAdmin):
     list_display = ('title',)
+    search_fields = ('title',)
     fieldsets = (
         (None, {
             'fields': ('title', 'placeId'),
