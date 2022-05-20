@@ -40,10 +40,10 @@ class Command(BaseCommand):
             geojson = response.json()
 
             title = geojson['title']
-            details_description_short = geojson['description_short'],
-            details_description_long = geojson['description_long'],
-            lng = geojson['coordinates']['lng'],
-            lat = geojson['coordinates']['lat'],
+            details_description_short = geojson['description_short']
+            details_description_long = geojson['description_long']
+            lng = geojson['coordinates']['lng']
+            lat = geojson['coordinates']['lat']
 
             place, created = Place.objects.get_or_create(
                 placeId=title,
@@ -57,12 +57,20 @@ class Command(BaseCommand):
                 },
             )
             self.stdout.write(self.style.SUCCESS(f'Загружено место "{title}"'))
+
             if not created:
                 self.stdout.write(self.style.NOTICE(
-                    f'Место "{title}" уже есть в базе. Будут загружены новые фотографии.'
+                    f'Место "{title}" уже есть в базе. Информация будет обновлена.'
                 ))
+                place.title = title
+                place.details_title = title
+                place.details_description_short = details_description_short
+                place.details_description_long = details_description_long
+                place.lng = lng
+                place.lat = lat
+                place.save()
                 place.imgs.all().delete()
-
+                
             for image_url in geojson['imgs']:
                 self.stdout.write(self.style.WARNING(
                     f'Попытка скачать картинку "{image_url}"'
