@@ -3,8 +3,13 @@ from tinymce.models import HTMLField
 
 
 class Place(models.Model):
-    title = models.CharField('Название', max_length=50)
-    placeId = models.CharField('Короткое название на английском', max_length=50, null=True)
+    title = models.CharField('Название', max_length=100)
+    placeId = models.CharField(
+        'Короткое уникальное название на английском',
+        max_length=100,
+        unique=True,
+        null=True,
+    )
     details_title = models.CharField('Полное название места', max_length=100, blank=True)
     details_description_short = models.TextField(
         'Короткое описание',
@@ -17,8 +22,8 @@ class Place(models.Model):
     places_sort = models.PositiveSmallIntegerField(
         default=0,
         db_index=True,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         verbose_name='Положение'
     )
 
@@ -34,6 +39,8 @@ class Place(models.Model):
 class Image(models.Model):
     image = models.ImageField(
         upload_to='places/image/',
+        blank=True,
+        null=True,
         verbose_name='Фотографии',
     )
     place = models.ForeignKey(
@@ -46,8 +53,8 @@ class Image(models.Model):
 
     img_sort = models.PositiveIntegerField(
         default=0,
-        blank=False,
-        null=False,
+        blank=True,
+        null=True,
         verbose_name='Порядок фоток'
     )
 
