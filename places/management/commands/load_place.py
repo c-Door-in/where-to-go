@@ -14,17 +14,6 @@ logger = logging.getLogger('log')
 class Command(BaseCommand):
     help = 'Parse place geoJSON format file'
 
-    def set_logger():
-        logger.setLevel(logging.DEBUG)
-        ch = logging.StreamHandler()
-        ch.setLevel(logging.DEBUG)
-        fmtstr = '%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s'
-        fmtdate = '%H:%M:%S'
-        formater = logging.Formatter(fmtstr, fmtdate)
-        ch.setFormatter(formater)
-        logger.addHandler(ch)
-        return 
-
     def add_arguments(self, parser):
         parser.add_argument(
             nargs='+',
@@ -78,7 +67,6 @@ class Command(BaseCommand):
                 image_response = requests.get(image_url)
                 response.raise_for_status()
                 image_content = ContentFile(image_response.content)
-
                 image_name = unquote(Path(urlparse(image_url).path).name)
                 image = Image.objects.create(
                     place=place,
