@@ -17,8 +17,8 @@ class Place(models.Model):
         blank=True,
     )
     details_description_long = HTMLField('Полное описание', blank=True)
-    lng = models.CharField('Долгота', max_length=50, null=True)
-    lat = models.CharField('Широта', max_length=50, null=True)
+    lng = models.FloatField('Долгота', max_length=50, null=True)
+    lat = models.FloatField('Широта', max_length=50, null=True)
     places_sort = models.PositiveSmallIntegerField(
         default=0,
         db_index=True,
